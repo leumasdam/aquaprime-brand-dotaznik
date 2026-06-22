@@ -340,7 +340,7 @@ main{
   </main>
 
   <footer class="page-footer">
-    AQUA<span class="slash">/</span>PRIME — brand discovery · vyplnenie ~ 8 min · odpovede ostávajú u teba kým ich neodošleš
+    AQUAPRIME — brand discovery · vyplnenie ~ 8 min · odpovede ostávajú u teba kým ich neodošleš
   </footer>
 
   <div class="toast" id="toast"></div>
@@ -351,8 +351,14 @@ main{
    Edituj len pole QUESTIONS nižšie. Žiadny build.
    ========================================================= */
 
-// KAM sa odošlú odpovede e-mailom (mailto). Zmeň podľa potreby:
+// KAM sa odošlú odpovede e-mailom (mailto fallback). Zmeň podľa potreby:
 const OWNER_EMAIL = "damnwern@gmail.com";
+
+// PRIAME ODOSLANIE NA MAIL bez backendu (odporúčané):
+//  1) choď na https://web3forms.com → zadaj svoj e-mail → príde ti "Access Key"
+//  2) vlož ho sem nižšie medzi úvodzovky a ulož.
+//  Odvtedy tlačidlo "Odoslať" pošle odpovede rovno na tvoj mail. Prázdne = mailto.
+const WEB3FORMS_KEY = "";
 
 const SECTIONS = {
   base:   "01 — Základ",
@@ -557,7 +563,7 @@ function renderIntro(){
     <section class="step fade-enter hero--zen">
       <div class="hero__copy">
         <p class="intro__sub">Pred tvorbou loga</p>
-        <h1 class="intro__hero">AQUA<span class="slash">/</span>PRIME</h1>
+        <h1 class="intro__hero">AQUAPRIME</h1>
         <p class="intro__lead">Skôr než vznikne logo, potrebujem rozumieť značke. Tento dotazník nastaví smer, osobnosť a vizuál — aby logo nebolo náhoda, ale rozhodnutie.</p>
         <p class="intro__lead">Niet zlých odpovedí. Píš úprimne a stručne — z toho sa dá stavať.</p>
         <ul class="intro__facts">
@@ -837,11 +843,38 @@ function renderSummary(){
     navigator.clipboard.writeText(buildPlainText()).then(()=>toast("Skopírované do schránky ✓"));
   });
   document.getElementById("txtBtn").addEventListener("click", downloadTxt);
-  document.getElementById("mailBtn").addEventListener("click", ()=>{
+  document.getElementById("mailBtn").addEventListener("click", (e)=> submitForm(e.currentTarget));
+}
+
+/* odoslanie: web3forms (priamo na mail) ak je kľúč, inak mailto */
+async function submitForm(btn){
+  if(!WEB3FORMS_KEY){
     const subj = encodeURIComponent("AQUAPRIME — Brand Discovery odpovede");
     const body = encodeURIComponent(buildPlainText());
     window.location.href = `mailto:${OWNER_EMAIL}?subject=${subj}&body=${body}`;
-  });
+    return;
+  }
+  const old = btn.innerHTML;
+  btn.disabled = true; btn.innerHTML = "Odosielam…";
+  try{
+    const res = await fetch("https://api.web3forms.com/submit", {
+      method:"POST",
+      headers:{ "Content-Type":"application/json", "Accept":"application/json" },
+      body: JSON.stringify({
+        access_key: WEB3FORMS_KEY,
+        subject: "AQUAPRIME — Brand Discovery odpovede",
+        from_name: answers["contact_name"] || "AQUAPRIME dotazník",
+        email: answers["contact_email"] || OWNER_EMAIL,
+        message: buildPlainText()
+      })
+    });
+    const j = await res.json();
+    if(j.success){ btn.innerHTML = "Odoslané ✓"; toast("Odoslané na e-mail ✓"); }
+    else throw new Error(j.message || "chyba");
+  }catch(err){
+    btn.disabled = false; btn.innerHTML = old;
+    toast("Nepodarilo sa odoslať — použi „Kopírovať“");
+  }
 }
 
 /* ===================== EXPORT / FORMÁTY ===================== */
