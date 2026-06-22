@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AQUAPRIME / Brand Discovery</title>
+<meta name="description" content="Dotazník pred tvorbou loga a značky AQUAPRIME — pomôže nastaviť smer, osobnosť a vizuál." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+/* ===== Fonty (Satoshi lokálne, zenko 1:1) ===== */
+@font-face{
+  font-family:"Satoshi";
+  src:url("./fonts/Satoshi-Variable.woff2") format("woff2");
+  font-weight:300 900; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:"Satoshi";
+  src:url("./fonts/Satoshi-VariableItalic.woff2") format("woff2");
+  font-weight:300 900; font-style:italic; font-display:swap;
+}
+
+/* ===== ZENKO design tokens ===== */
+:root{
+  --paper:#f3eee3;
+  --surface:#fbf8f1;
+  --ink:#111111;
+  --ink-soft:#4b463d;
+  --gold:#b0804f;
+  --gold-soft:#c9a877;
+  --line:#e3dccc;
+  --radius:18px;
+  --maxw:760px;
+  --mono:"JetBrains Mono",ui-monospace,monospace;
+  --sans:"Satoshi",system-ui,sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0; min-height:100dvh;
+  background:var(--paper); color:var(--ink);
+  font-family:var(--sans); line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+  display:flex; flex-direction:column;
+}
+button{font:inherit;}
+a{color:inherit;}
+
+/* ===== Header ===== */
+.header{
+  position:sticky; top:0; z-index:30;
+  background:color-mix(in srgb,var(--paper) 86%,transparent);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--line);
+}
+.header__inner{
+  max-width:var(--maxw); margin-inline:auto;
+  padding:16px clamp(20px,5vw,40px);
+  display:flex; align-items:center; justify-content:space-between; gap:16px;
+}
+.brand{font-size:20px; font-weight:700; letter-spacing:-.01em; text-decoration:none;}
+.brand .slash{color:var(--gold); font-weight:400; margin:0 1px;}
+.header__tag{font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--gold);}
+
+/* ===== Layout ===== */
+main{
+  flex:1; width:100%; max-width:var(--maxw);
+  margin-inline:auto; padding:clamp(24px,5vw,56px) clamp(20px,5vw,40px) 80px;
+  display:flex; flex-direction:column;
+}
+
+/* ===== Progress ===== */
+.progress{margin-bottom:clamp(28px,5vw,48px);}
+.progress__meta{
+  display:flex; justify-content:space-between; align-items:baseline;
+  font-family:var(--mono); font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-soft); margin-bottom:10px;
+}
+.progress__meta b{color:var(--gold); font-weight:600;}
+.progress__bar{height:3px; background:var(--line); border-radius:2px; overflow:hidden;}
+.progress__fill{height:100%; width:0; background:var(--gold); border-radius:2px;
+  transition:width .45s cubic-bezier(.2,.7,.2,1);}
+.progress.is-hidden{visibility:hidden;}
+
+/* ===== Step (klikačka obrazovka) ===== */
+.step{display:flex; flex-direction:column;}
+.step__eyebrow{
+  font-family:var(--mono); font-size:11px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--gold); margin-bottom:14px;
+  display:inline-flex; flex-direction:column; gap:10px;
+}
+.step__eyebrow::after{content:""; width:34px; height:2px; background:var(--gold); border-radius:2px;}
+.step__title{
+  font-size:clamp(26px,4.5vw,40px); font-weight:600; letter-spacing:-.02em;
+  line-height:1.12; margin:0 0 12px;
+}
+.step__help{color:var(--ink-soft); font-size:15px; margin:0 0 28px; max-width:60ch;}
+
+/* anim prechod */
+.fade-enter{animation:fadeIn .42s cubic-bezier(.2,.7,.2,1) both;}
+@keyframes fadeIn{from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:none;}}
+@media (prefers-reduced-motion:reduce){.fade-enter{animation:none;}}
+
+/* ===== Intro ===== */
+.intro__hero{font-size:clamp(40px,9vw,84px); font-weight:700; letter-spacing:-.03em; line-height:.98; margin:0 0 6px;}
+.intro__hero .slash{color:var(--gold); font-weight:400;}
+.intro__sub{font-family:var(--mono); font-size:13px; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin:0 0 26px;}
+.intro__lead{font-size:18px; color:var(--ink-soft); max-width:54ch; margin:0 0 14px;}
+.intro__facts{list-style:none; padding:0; margin:24px 0 36px; display:flex; flex-wrap:wrap; gap:14px;}
+.intro__facts li{display:inline-flex; align-items:center; gap:8px; font-size:13px; color:var(--ink-soft);
+  border:1px solid var(--line); background:var(--surface); border-radius:999px; padding:8px 14px;}
+.intro__facts b{color:var(--gold); font-family:var(--mono); font-size:12px;}
+
+/* ===== Inputy ===== */
+.field input[type=text], .field textarea{
+  width:100%; font:inherit; font-size:17px; color:var(--ink);
+  background:var(--surface); border:1px solid var(--line); border-radius:12px;
+  padding:16px 18px; outline:none; transition:border-color .2s, box-shadow .2s; resize:vertical;
+}
+.field textarea{min-height:140px; line-height:1.6;}
+.field input:focus, .field textarea:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 3px color-mix(in srgb,var(--gold) 18%,transparent);
+}
+.field input::placeholder, .field textarea::placeholder{color:#a89e8c;}
+
+/* dva-stĺpcové (meno+email) */
+.field--row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+@media (max-width:520px){.field--row{grid-template-columns:1fr;}}
+
+/* ===== Choice cards (single) ===== */
+.choices{display:grid; gap:12px;}
+.choice{
+  text-align:left; cursor:pointer; background:var(--surface);
+  border:1px solid var(--line); border-radius:var(--radius);
+  padding:18px 20px; display:flex; gap:16px; align-items:flex-start;
+  transition:transform .25s cubic-bezier(.2,.7,.2,1), border-color .2s, box-shadow .25s, background .2s;
+}
+.choice:hover{transform:translateY(-3px); box-shadow:0 16px 34px -24px rgba(0,0,0,.45);}
+.choice.is-selected{border-color:var(--gold); background:color-mix(in srgb,var(--gold) 8%,var(--surface));}
+.choice__mark{
+  flex:none; width:22px; height:22px; border-radius:50%; border:1.5px solid var(--line);
+  display:grid; place-items:center; margin-top:2px; transition:.2s;
+}
+.choice.is-selected .choice__mark{border-color:var(--gold); background:var(--gold);}
+.choice__mark::after{content:""; width:8px; height:8px; border-radius:50%; background:#fff; opacity:0; transition:.2s;}
+.choice.is-selected .choice__mark::after{opacity:1;}
+.choice__body{flex:1;}
+.choice__label{font-size:17px; font-weight:600; letter-spacing:-.01em;}
+.choice__desc{font-size:14px; color:var(--ink-soft); margin-top:4px;}
+.choice__num{font-family:var(--mono); font-size:12px; color:var(--gold); margin-right:2px;}
+
+/* multi -> štvorcový mark */
+.choice--multi .choice__mark{border-radius:6px;}
+.choice--multi.is-selected .choice__mark::after{border-radius:2px;}
+
+/* chips (multi kompaktné) */
+.chips{display:flex; flex-wrap:wrap; gap:10px;}
+.chip{
+  cursor:pointer; background:var(--surface); border:1px solid var(--line);
+  border-radius:999px; padding:11px 18px; font-size:15px; color:var(--ink-soft);
+  transition:.2s; display:inline-flex; align-items:center; gap:8px;
+}
+.chip:hover{border-color:var(--gold-soft); color:var(--ink);}
+.chip.is-selected{border-color:var(--gold); background:color-mix(in srgb,var(--gold) 12%,var(--surface)); color:var(--ink); font-weight:600;}
+.chip__tick{color:var(--gold); font-weight:700; opacity:0; width:0; transition:.2s; overflow:hidden;}
+.chip.is-selected .chip__tick{opacity:1; width:14px;}
+
+/* "iné" voľný text pre multi/single */
+.other-field{margin-top:14px; display:none;}
+.other-field.is-shown{display:block;}
+
+/* ===== Scale (semantic differential) ===== */
+.scale__ends{display:flex; justify-content:space-between; gap:16px; margin-bottom:14px;}
+.scale__end{font-size:15px; font-weight:600;}
+.scale__end--right{text-align:right; color:var(--ink-soft);}
+.scale__track{position:relative; padding:6px 0 2px;}
+.scale__range{
+  -webkit-appearance:none; appearance:none; width:100%; height:3px;
+  background:var(--line); border-radius:2px; outline:none; cursor:pointer;
+}
+.scale__range::-webkit-slider-thumb{
+  -webkit-appearance:none; appearance:none; width:26px; height:26px; border-radius:50%;
+  background:var(--gold); border:4px solid var(--paper); box-shadow:0 2px 10px -2px rgba(0,0,0,.4); cursor:grab;
+}
+.scale__range::-moz-range-thumb{
+  width:26px; height:26px; border-radius:50%; background:var(--gold);
+  border:4px solid var(--paper); box-shadow:0 2px 10px -2px rgba(0,0,0,.4); cursor:grab;
+}
+.scale__ticks{display:flex; justify-content:space-between; margin-top:12px;}
+.scale__ticks span{font-family:var(--mono); font-size:11px; color:#a89e8c;}
+.scale__value{font-family:var(--mono); font-size:12px; color:var(--gold); text-align:center; margin-top:10px; letter-spacing:.1em; text-transform:uppercase;}
+
+/* ===== Navigácia ===== */
+.nav{display:flex; align-items:center; gap:14px; margin-top:36px; flex-wrap:wrap;}
+.btn{
+  display:inline-flex; align-items:center; gap:10px; cursor:pointer;
+  font-size:13px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+  text-decoration:none; padding:14px 28px; border-radius:2px; border:1px solid transparent; transition:.2s;
+}
+.btn--gold{background:var(--gold); color:#fff;}
+.btn--gold:hover{background:var(--ink);}
+.btn--gold:disabled{opacity:.4; cursor:not-allowed; background:var(--gold);}
+.btn--ghost{color:var(--ink-soft); border-color:transparent; padding-inline:6px;}
+.btn--ghost:hover{color:var(--gold);}
+.btn--outline{color:var(--ink); border-color:var(--line); background:var(--surface);}
+.btn--outline:hover{border-color:var(--gold); color:var(--gold);}
+.nav__hint{font-family:var(--mono); font-size:11px; color:#a89e8c; margin-left:auto; letter-spacing:.08em;}
+@media (max-width:520px){.nav__hint{display:none;}}
+
+/* ===== Summary ===== */
+.summary__group{margin:0 0 26px;}
+.summary__qlabel{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--gold); margin-bottom:6px;}
+.summary__q{font-size:14px; color:var(--ink-soft); margin-bottom:4px;}
+.summary__a{font-size:17px; font-weight:600; letter-spacing:-.01em; white-space:pre-wrap;}
+.summary__a.is-empty{color:#a89e8c; font-weight:400; font-style:italic;}
+.summary__divider{height:1px; background:var(--line); margin:0 0 26px;}
+.actions{display:flex; flex-wrap:wrap; gap:12px; margin-top:34px;}
+.toast{
+  position:fixed; bottom:26px; left:50%; transform:translateX(-50%) translateY(20px);
+  background:var(--ink); color:var(--paper); padding:12px 22px; border-radius:999px;
+  font-size:14px; opacity:0; pointer-events:none; transition:.3s; z-index:60;
+}
+.toast.is-shown{opacity:1; transform:translateX(-50%) translateY(0);}
+
+/* footer */
+.page-footer{
+  border-top:1px solid var(--line); padding:20px clamp(20px,5vw,40px);
+  font-size:12px; color:#a89e8c; text-align:center;
+}
+.page-footer .slash{color:var(--gold);}
+</style>
+</head>
+<body>
+  <header class="header">
+    <div class="header__inner">
+      <a class="brand" href="#" id="brandLink">AQUA<span class="slash">/</span>PRIME</a>
+      <span class="header__tag">Brand Discovery</span>
+    </div>
+  </header>
+
+  <main>
+    <div class="progress is-hidden" id="progress">
+      <div class="progress__meta">
+        <span id="progressLabel">Otázka 1</span>
+        <span><b id="progressCur">0</b>&nbsp;/&nbsp;<span id="progressTot">0</span></span>
+      </div>
+      <div class="progress__bar"><div class="progress__fill" id="progressFill"></div></div>
+    </div>
+
+    <div id="screen"></div>
+  </main>
+
+  <footer class="page-footer">
+    AQUA<span class="slash">/</span>PRIME — brand discovery · vyplnenie ~ 8 min · odpovede ostávajú u teba kým ich neodošleš
+  </footer>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   AQUAPRIME — Brand Discovery (statická klikačka, GH Pages)
+   Edituj len pole QUESTIONS nižšie. Žiadny build.
+   ========================================================= */
+
+// KAM sa odošlú odpovede e-mailom (mailto). Zmeň podľa potreby:
+const OWNER_EMAIL = "damnwern@gmail.com";
+
+const SECTIONS = {
+  base:   "01 — Základ",
+  client: "02 — Zákazník",
+  diff:   "03 — Odlíšenie",
+  pers:   "04 — Osobnosť značky",
+  visual: "05 — Vizuálny smer",
+  logo:   "06 — Logo & formáty",
+  prac:   "07 — Praktické",
+};
+
+const QUESTIONS = [
+  // ---- 01 Základ ----
+  { sec:"base", id:"oneliner", type:"textarea",
+    q:"Ako jednou vetou opíšeš, čo AQUAPRIME ponúka?",
+    help:"Predstav si, že to hovoríš človeku, ktorý vás vôbec nepozná.",
+    ph:"Napr. Navrhujeme a vyrábame prémiové akvarijné skrinky na mieru…" },
+
+  { sec:"base", id:"core", type:"multi",
+    q:"Čo tvorí jadro ponuky?",
+    help:"Vyber všetko podstatné. Prvé v poradí = najdôležitejšie.",
+    options:["Akvarijné skrinky na mieru","Kompletné akvaristické zostavy","Údržba a servis","Poradenstvo / dizajn interiéru","Doplnky a technika"],
+    other:true },
+
+  { sec:"base", id:"price", type:"single",
+    q:"V akej cenovej hladine sa pohybujete?",
+    options:[
+      {label:"Dostupná", desc:"cena je hlavný argument"},
+      {label:"Stredná", desc:"rozumný pomer cena/kvalita"},
+      {label:"Prémiová", desc:"kvalita a dizajn pred cenou"},
+      {label:"Luxus na mieru", desc:"exkluzivita, bez kompromisu"},
+    ]},
+
+  // ---- 02 Zákazník ----
+  { sec:"client", id:"persona", type:"textarea",
+    q:"Kto je váš ideálny zákazník?",
+    help:"Vek, životný štýl, prečo si to kupuje, ako sa rozhoduje.",
+    ph:"Napr. 35–55 r., vlastné bývanie, cení si dizajn a pokoj doma…" },
+
+  { sec:"client", id:"buyer", type:"single",
+    q:"Kto kupuje najčastejšie?",
+    options:[
+      {label:"Domácnosť / byt", desc:"do obývačky, k stene"},
+      {label:"Dizajnový interiér", desc:"architekti, náročný vkus"},
+      {label:"Firma / priestor", desc:"recepcia, wellness, ordinácia"},
+      {label:"Zberateľ / aquarista", desc:"rozumie technike, chce viac"},
+    ]},
+
+  { sec:"client", id:"drivers", type:"multi",
+    q:"Čo zákazníka najviac presvedčí?",
+    help:"Vyber 2–3 najsilnejšie.",
+    options:["Kvalita spracovania","Dizajn a vzhľad","Na mieru","Cena","Značka a prestíž","Servis a istota"] },
+
+  // ---- 03 Odlíšenie ----
+  { sec:"diff", id:"competitors", type:"textarea",
+    q:"Kto sú vaši hlavní konkurenti?",
+    help:"Mená, weby — pokojne aj „nikto presne taký“.",
+    ph:"Napr. …" },
+
+  { sec:"diff", id:"edge", type:"textarea",
+    q:"Čím ste lepší alebo iní?",
+    help:"To, čo by konkurencia o sebe nemohla povedať.",
+    ph:"Napr. …" },
+
+  { sec:"diff", id:"firstimpression", type:"text",
+    q:"Čo by mal človek povedať po prvom dojme?",
+    help:"Jeden pocit / jedna veta.",
+    ph:"Napr. „Toto vyzerá draho a premyslene.“" },
+
+  // ---- 04 Osobnosť (scales) ----
+  { sec:"pers", id:"s_modern", type:"scale", left:"Klasické", right:"Moderné" },
+  { sec:"pers", id:"s_rich",   type:"scale", left:"Minimalistické", right:"Bohaté, dekoratívne" },
+  { sec:"pers", id:"s_excl",   type:"scale", left:"Dostupné", right:"Exkluzívne" },
+  { sec:"pers", id:"s_org",    type:"scale", left:"Technické, presné", right:"Organické, prírodné" },
+  { sec:"pers", id:"s_bold",   type:"scale", left:"Tiché, zdržanlivé", right:"Výrazné, odvážne" },
+  { sec:"pers", id:"s_warm",   type:"scale", left:"Chladné", right:"Teplé" },
+
+  // ---- 05 Vizuálny smer ----
+  { sec:"visual", id:"direction", type:"single",
+    q:"Ktorý vizuálny smer ti je najbližší?",
+    help:"Nemusí byť finálny — len kde sa cítiš doma.",
+    options:[
+      {label:"Tmavé prémiové sklo", desc:"hĺbka vody, čierna, LED akcent (dnešný aquaprime)"},
+      {label:"Čisté svetlé minimum", desc:"vzduch, priestor, galerijný pokoj"},
+      {label:"Prírodné a organické", desc:"drevo, zeleň, aquascape, teplo"},
+      {label:"Technické, inžinierske", desc:"presnosť, modrá, dáta, sústava"},
+    ]},
+
+  { sec:"visual", id:"colors", type:"chips",
+    q:"K akým farbám inklinuješ?",
+    help:"Pokojne aj viac — uvidíme, čo sa zhlukuje.",
+    options:["Hlboká modrá","Čierna / antracit","Cyan / akva LED","Smaragdová zeleň","Piesková / béžová","Biela a sklo","Meď / zlatá"],
+    other:true },
+
+  { sec:"visual", id:"typo", type:"single",
+    q:"Aký charakter písma ťa láka?",
+    options:[
+      {label:"Elegantná serif", desc:"prémium, redakčný pocit"},
+      {label:"Čistá moderná sans", desc:"neutrálne, technologické"},
+      {label:"Technická mono", desc:"inžinierske, presné"},
+      {label:"Kombinácia", desc:"serif nadpisy + sans text"},
+    ]},
+
+  { sec:"visual", id:"refs", type:"textarea",
+    q:"Páčia sa ti nejaké referencie?",
+    help:"Odkazy na weby, značky alebo logá + krátko prečo.",
+    ph:"Napr. https://… — páči sa mi pokoj a typografia…" },
+
+  { sec:"visual", id:"avoid", type:"textarea",
+    q:"Čomu sa naopak chceš vyhnúť?",
+    help:"Farby, štýly, klišé, konkrétne značky.",
+    ph:"Napr. žiadne detské rybičky, žiadne pestrofarebné gradienty…" },
+
+  // ---- 06 Logo & formáty (to čo si spomenul btw) ----
+  { sec:"logo", id:"placements", type:"chips",
+    q:"Kde všade bude logo reálne žiť?",
+    help:"Toto rozhoduje, koľko variantov loga budeš potrebovať.",
+    options:["Web hlavička","Favicon / app ikona","Sociálne siete (avatar)","Vodoznak na fotkách","Gravír / laser na skrinke","Výšivka","Faktúry a dokumenty","Polep auta","Banner / billboard","Obal a nálepky"] },
+
+  { sec:"logo", id:"iconneed", type:"single",
+    q:"Potrebuješ aj samostatnú značku/ikonu bez názvu?",
+    help:"Napr. ako favicon alebo avatar, kde sa text neprečíta.",
+    options:[
+      {label:"Áno", desc:"ikona musí fungovať aj sama"},
+      {label:"Nie", desc:"stačí wordmark (názov)"},
+      {label:"Neviem", desc:"nechám na odporúčanie"},
+    ]},
+
+  { sec:"logo", id:"mono", type:"single",
+    q:"Musí logo fungovať jednofarebne?",
+    help:"Čierna na bielom, biela na čiernom, jeden ťah pre gravír/výšivku.",
+    options:[
+      {label:"Áno, povinné", desc:"gravír / výšivka / pečiatka to potrebujú"},
+      {label:"Ideálne áno", desc:"bonus, ak to vyjde"},
+      {label:"Nie je dôležité", desc:"primárne ostane farebné"},
+    ]},
+
+  { sec:"logo", id:"symbolism", type:"chips",
+    q:"Čo by malo logo evokovať?",
+    help:"Symbolika, nie konkrétny tvar.",
+    options:["Voda / vlna","Ryba","Akvárium / rám","Čistota / sklo","Prémium","Len typografia (žiadny symbol)"],
+    other:true },
+
+  // ---- 07 Praktické ----
+  { sec:"prac", id:"name", type:"single",
+    q:"Názov ostáva „AQUAPRIME“ presne takto?",
+    options:[
+      {label:"Áno, presne takto", desc:""},
+      {label:"Drobná úprava písania", desc:"napr. spacing, veľké/malé"},
+      {label:"Otvorený som zmene", desc:"môžeme zvážiť alternatívy"},
+    ]},
+
+  { sec:"prac", id:"claim", type:"text",
+    q:"Chceš claim / slogan pod logo?",
+    help:"Napíš návrh, alebo nechaj „navrhni“ a vymyslíme.",
+    ph:"Napr. Akváriá, ktoré vyzerajú ako nábytok. / navrhni" },
+
+  { sec:"prac", id:"langs", type:"chips",
+    q:"V akých jazykoch značka komunikuje?",
+    options:["SK","EN","DE","CZ","HU"],
+    other:true },
+
+  { sec:"prac", id:"notes", type:"textarea",
+    q:"Čokoľvek dôležité, na čo sme sa nespýtali?",
+    help:"Voľné pole — termíny, rozpočet, obmedzenia, vízia.",
+    ph:"…", optional:true },
+
+  { sec:"prac", id:"contact", type:"contact",
+    q:"Kam ti pošleme výstup?",
+    help:"Meno a e-mail — nech vieme priradiť odpovede.",
+    optional:true },
+];
+
+/* ===================== STAV ===================== */
+const answers = {};
+const screen = document.getElementById("screen");
+const progressEl = document.getElementById("progress");
+const fillEl = document.getElementById("progressFill");
+const curEl = document.getElementById("progressCur");
+const totEl = document.getElementById("progressTot");
+const labelEl = document.getElementById("progressLabel");
+const toastEl = document.getElementById("toast");
+
+// index: -1 = intro, 0..N-1 = otázky, N = summary
+let idx = -1;
+const N = QUESTIONS.length;
+totEl.textContent = N;
+
+document.getElementById("brandLink").addEventListener("click", (e)=>{e.preventDefault(); idx=-1; render();});
+
+/* ===================== RENDER ===================== */
+function render(){
+  if(idx === -1){ renderIntro(); }
+  else if(idx >= N){ renderSummary(); }
+  else { renderQuestion(QUESTIONS[idx]); }
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+function renderIntro(){
+  progressEl.classList.add("is-hidden");
+  screen.innerHTML = `
+    <section class="step fade-enter">
+      <p class="intro__sub">Pred tvorbou loga</p>
+      <h1 class="intro__hero">AQUA<span class="slash">/</span>PRIME</h1>
+      <p class="intro__lead">Skôr než vznikne logo, potrebujem rozumieť značke. Tento dotazník nastaví smer, osobnosť a vizuál — aby logo nebolo náhoda, ale rozhodnutie.</p>
+      <p class="intro__lead">Niet zlých odpovedí. Píš úprimne a stručne — z toho sa dá stavať.</p>
+      <ul class="intro__facts">
+        <li><b>${N}</b> otázok</li>
+        <li><b>~8</b> minút</li>
+        <li><b>0</b> registrácií</li>
+        <li>odpovede ostávajú <b>u teba</b></li>
+      </ul>
+      <div class="nav">
+        <button class="btn btn--gold" id="startBtn">Začať &rarr;</button>
+        <span class="nav__hint">Enter pre štart</span>
+      </div>
+    </section>`;
+  document.getElementById("startBtn").addEventListener("click", next);
+}
+
+function renderQuestion(item){
+  progressEl.classList.remove("is-hidden");
+  const num = idx+1;
+  curEl.textContent = num;
+  fillEl.style.width = (num/N*100) + "%";
+  labelEl.textContent = SECTIONS[item.sec] || "Otázka";
+
+  let body = "";
+  switch(item.type){
+    case "text":     body = renderText(item, false); break;
+    case "textarea": body = renderText(item, true); break;
+    case "single":   body = renderSingle(item); break;
+    case "multi":    body = renderMulti(item, "card"); break;
+    case "chips":    body = renderMulti(item, "chip"); break;
+    case "scale":    body = renderScale(item); break;
+    case "contact":  body = renderContact(item); break;
+  }
+
+  const optional = item.optional ? `<span class="nav__hint">nepovinné</span>` : `<span class="nav__hint" id="navHint"></span>`;
+
+  screen.innerHTML = `
+    <section class="step fade-enter">
+      <span class="step__eyebrow">${SECTIONS[item.sec]||""}</span>
+      <h2 class="step__title">${item.q || (item.left + " ↔ " + item.right)}</h2>
+      ${item.help ? `<p class="step__help">${item.help}</p>` : (item.type==="scale"?`<p class="step__help">Posuň jazdec tam, kam značka patrí.</p>`:"")}
+      <div class="field">${body}</div>
+      <div class="nav">
+        <button class="btn btn--ghost" id="backBtn">&larr; Späť</button>
+        <button class="btn btn--gold" id="nextBtn">${idx===N-1?"Hotovo &rarr;":"Ďalej &rarr;"}</button>
+        ${optional}
+      </div>
+    </section>`;
+
+  document.getElementById("backBtn").addEventListener("click", prev);
+  document.getElementById("nextBtn").addEventListener("click", next);
+  wireInputs(item);
+}
+
+/* ---- render: text/textarea ---- */
+function renderText(item, multi){
+  const val = answers[item.id] || "";
+  const el = multi
+    ? `<textarea id="inp" placeholder="${item.ph||""}">${escapeHtml(val)}</textarea>`
+    : `<input type="text" id="inp" value="${escapeAttr(val)}" placeholder="${item.ph||""}" />`;
+  return el;
+}
+
+/* ---- render: single ---- */
+function renderSingle(item){
+  const sel = answers[item.id];
+  const opts = item.options.map((o,i)=>{
+    const label = typeof o==="string"?o:o.label;
+    const desc = typeof o==="string"?"":o.desc;
+    const on = sel===label ? "is-selected":"";
+    return `<button type="button" class="choice ${on}" data-val="${escapeAttr(label)}">
+      <span class="choice__mark"></span>
+      <span class="choice__body">
+        <span class="choice__label"><span class="choice__num">${String(i+1).padStart(2,"0")}</span>${label}</span>
+        ${desc?`<span class="choice__desc">${desc}</span>`:""}
+      </span></button>`;
+  }).join("");
+  return `<div class="choices" data-kind="single">${opts}</div>`;
+}
+
+/* ---- render: multi (card alebo chip) ---- */
+function renderMulti(item, mode){
+  const sel = answers[item.id] || [];
+  const otherVal = answers[item.id+"__other"] || "";
+  let html;
+  if(mode==="chip"){
+    html = `<div class="chips" data-kind="multi">` + item.options.map(o=>{
+      const on = sel.includes(o)?"is-selected":"";
+      return `<button type="button" class="chip ${on}" data-val="${escapeAttr(o)}"><span class="chip__tick">✓</span>${o}</button>`;
+    }).join("") + `</div>`;
+  } else {
+    html = `<div class="choices" data-kind="multi">` + item.options.map((o,i)=>{
+      const on = sel.includes(o)?"is-selected":"";
+      return `<button type="button" class="choice choice--multi ${on}" data-val="${escapeAttr(o)}">
+        <span class="choice__mark"></span>
+        <span class="choice__body"><span class="choice__label"><span class="choice__num">${String(i+1).padStart(2,"0")}</span>${o}</span></span>
+      </button>`;
+    }).join("") + `</div>`;
+  }
+  if(item.other){
+    const shown = sel.includes("__other__") ? "is-shown":"";
+    html += `<div class="other-field ${shown}" id="otherWrap">
+      <input type="text" id="otherInp" value="${escapeAttr(otherVal)}" placeholder="Iné — napíš vlastné…" /></div>`;
+  }
+  return html;
+}
+
+/* ---- render: scale ---- */
+function renderScale(item){
+  const val = answers[item.id] || 4;
+  return `
+    <div class="scale">
+      <div class="scale__ends">
+        <span class="scale__end">${item.left}</span>
+        <span class="scale__end scale__end--right">${item.right}</span>
+      </div>
+      <div class="scale__track">
+        <input type="range" min="1" max="7" step="1" value="${val}" class="scale__range" id="inp" />
+      </div>
+      <div class="scale__ticks">${[1,2,3,4,5,6,7].map(n=>`<span>${n}</span>`).join("")}</div>
+      <div class="scale__value" id="scaleVal">${scaleWord(val)}</div>
+    </div>`;
+}
+
+/* ---- render: contact ---- */
+function renderContact(item){
+  const name = answers["contact_name"]||"";
+  const mail = answers["contact_email"]||"";
+  return `<div class="field--row">
+    <input type="text" id="cName" value="${escapeAttr(name)}" placeholder="Meno" />
+    <input type="text" id="cMail" value="${escapeAttr(mail)}" placeholder="E-mail" />
+  </div>`;
+}
+
+/* ===================== WIRING ===================== */
+function wireInputs(item){
+  if(item.type==="text" || item.type==="textarea"){
+    const inp = document.getElementById("inp");
+    inp.focus();
+    inp.addEventListener("input", ()=> answers[item.id]=inp.value.trim());
+  }
+
+  if(item.type==="single"){
+    screen.querySelectorAll(".choice").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        answers[item.id]=btn.dataset.val;
+        screen.querySelectorAll(".choice").forEach(b=>b.classList.remove("is-selected"));
+        btn.classList.add("is-selected");
+        setTimeout(next, 220); // auto-advance feeling klikačky
+      });
+    });
+  }
+
+  if(item.type==="multi" || item.type==="chips"){
+    if(!answers[item.id]) answers[item.id]=[];
+    const toggle = (val, btn)=>{
+      const arr = answers[item.id];
+      const i = arr.indexOf(val);
+      if(i>=0){ arr.splice(i,1); btn.classList.remove("is-selected"); }
+      else { arr.push(val); btn.classList.add("is-selected"); }
+      // other field
+      if(val==="__other__"){
+        const w = document.getElementById("otherWrap");
+        if(w){ w.classList.toggle("is-shown", arr.includes("__other__")); if(arr.includes("__other__")) document.getElementById("otherInp").focus(); }
+      }
+    };
+    screen.querySelectorAll(".choice,.chip").forEach(btn=>{
+      btn.addEventListener("click", ()=> toggle(btn.dataset.val, btn));
+    });
+    if(item.other){
+      // pridaj „Iné“ tlačidlo na koniec
+      const cont = screen.querySelector('[data-kind="multi"]');
+      const isChip = cont.classList.contains("chips");
+      const onSel = (answers[item.id]||[]).includes("__other__")?"is-selected":"";
+      const otherBtn = document.createElement("button");
+      otherBtn.type="button";
+      otherBtn.className = (isChip?"chip ":"choice choice--multi ")+onSel;
+      otherBtn.dataset.val="__other__";
+      otherBtn.innerHTML = isChip
+        ? `<span class="chip__tick">✓</span>Iné…`
+        : `<span class="choice__mark"></span><span class="choice__body"><span class="choice__label">Iné…</span></span>`;
+      otherBtn.addEventListener("click", ()=> toggle("__other__", otherBtn));
+      cont.appendChild(otherBtn);
+      const oi = document.getElementById("otherInp");
+      if(oi) oi.addEventListener("input", ()=> answers[item.id+"__other"]=oi.value.trim());
+    }
+  }
+
+  if(item.type==="scale"){
+    const inp = document.getElementById("inp");
+    answers[item.id] = parseInt(inp.value,10);
+    const out = document.getElementById("scaleVal");
+    inp.addEventListener("input", ()=>{
+      answers[item.id]=parseInt(inp.value,10);
+      out.textContent = scaleWord(inp.value);
+    });
+  }
+
+  if(item.type==="contact"){
+    const n=document.getElementById("cName"), m=document.getElementById("cMail");
+    n.addEventListener("input", ()=>answers["contact_name"]=n.value.trim());
+    m.addEventListener("input", ()=>answers["contact_email"]=m.value.trim());
+  }
+}
+
+/* ===================== NAVIGÁCIA ===================== */
+function next(){
+  // jemná validácia: povinné textové polia
+  if(idx>=0 && idx<N){
+    const item = QUESTIONS[idx];
+    if(!item.optional && (item.type==="text"||item.type==="textarea")){
+      if(!answers[item.id]){ shake(); toast("Napíš krátku odpoveď 🙂"); return; }
+    }
+    if(!item.optional && (item.type==="multi"||item.type==="chips")){
+      const arr=answers[item.id]||[];
+      const real=arr.filter(v=>v!=="__other__").length + ((arr.includes("__other__")&&answers[item.id+"__other"])?1:0);
+      if(real===0){ shake(); toast("Vyber aspoň jednu možnosť 🙂"); return; }
+    }
+  }
+  idx++; render();
+}
+function prev(){ if(idx>-1){ idx--; render(); } }
+
+document.addEventListener("keydown",(e)=>{
+  if(e.key==="Enter"){
+    const t=e.target.tagName;
+    if(t==="TEXTAREA") return;      // v textarea Enter = nový riadok
+    if(idx===-1){ next(); return; }
+    if(t==="INPUT" || t==="BODY"){ next(); }
+  }
+});
+
+/* ===================== SUMMARY ===================== */
+function renderSummary(){
+  progressEl.classList.add("is-hidden");
+  let rows = "";
+  let lastSec = "";
+  QUESTIONS.forEach(item=>{
+    if(item.sec!==lastSec){
+      if(lastSec!=="") rows += `<div class="summary__divider"></div>`;
+      lastSec = item.sec;
+    }
+    const a = formatAnswer(item);
+    rows += `<div class="summary__group">
+      <div class="summary__qlabel">${SECTIONS[item.sec]}</div>
+      <div class="summary__q">${item.q || (item.left+" ↔ "+item.right)}</div>
+      <div class="summary__a ${a?"":"is-empty"}">${a||"— bez odpovede —"}</div>
+    </div>`;
+  });
+
+  screen.innerHTML = `
+    <section class="step fade-enter">
+      <span class="step__eyebrow">Hotovo</span>
+      <h2 class="step__title">Zhrnutie odpovedí</h2>
+      <p class="step__help">Skontroluj a pošli. Z týchto odpovedí postavíme smer značky a logo AQUAPRIME.</p>
+      ${rows}
+      <div class="actions">
+        <button class="btn btn--gold" id="mailBtn">Odoslať e-mailom &rarr;</button>
+        <button class="btn btn--outline" id="copyBtn">Kopírovať</button>
+        <button class="btn btn--outline" id="txtBtn">Stiahnuť .txt</button>
+        <button class="btn btn--ghost" id="editBtn">&larr; Upraviť</button>
+      </div>
+    </section>`;
+
+  document.getElementById("editBtn").addEventListener("click", ()=>{idx=N-1; render();});
+  document.getElementById("copyBtn").addEventListener("click", ()=>{
+    navigator.clipboard.writeText(buildPlainText()).then(()=>toast("Skopírované do schránky ✓"));
+  });
+  document.getElementById("txtBtn").addEventListener("click", downloadTxt);
+  document.getElementById("mailBtn").addEventListener("click", ()=>{
+    const subj = encodeURIComponent("AQUAPRIME — Brand Discovery odpovede");
+    const body = encodeURIComponent(buildPlainText());
+    window.location.href = `mailto:${OWNER_EMAIL}?subject=${subj}&body=${body}`;
+  });
+}
+
+/* ===================== EXPORT / FORMÁTY ===================== */
+function formatAnswer(item){
+  if(item.type==="scale"){
+    const v=answers[item.id]; return v?`${v}/7 — ${scaleWord(v)} (${item.left} ↔ ${item.right})`:"";
+  }
+  if(item.type==="contact"){
+    const n=answers["contact_name"]||"", m=answers["contact_email"]||"";
+    return (n||m)?`${n}${n&&m?" · ":""}${m}`:"";
+  }
+  if(item.type==="multi"||item.type==="chips"){
+    const arr=(answers[item.id]||[]).slice();
+    const other=answers[item.id+"__other"];
+    const list=arr.filter(v=>v!=="__other__");
+    if(arr.includes("__other__")&&other) list.push("Iné: "+other);
+    return list.join(", ");
+  }
+  return answers[item.id]||"";
+}
+
+function buildPlainText(){
+  let out="AQUAPRIME — BRAND DISCOVERY\n";
+  out+="===========================\n\n";
+  let lastSec="";
+  QUESTIONS.forEach(item=>{
+    if(item.sec!==lastSec){ out+=`\n— ${SECTIONS[item.sec]} —\n`; lastSec=item.sec; }
+    const q=item.q || (item.left+" ↔ "+item.right);
+    out+=`\n${q}\n${formatAnswer(item)||"(bez odpovede)"}\n`;
+  });
+  return out;
+}
+
+function downloadTxt(){
+  const blob=new Blob([buildPlainText()],{type:"text/plain;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url; a.download="aquaprime-brand-discovery.txt";
+  a.click(); URL.revokeObjectURL(url);
+  toast("Stiahnuté ✓");
+}
+
+/* ===================== HELPERS ===================== */
+function scaleWord(v){
+  v=parseInt(v,10);
+  return ["—","silno vľavo","vľavo","skôr vľavo","stred","skôr vpravo","vpravo","silno vpravo"][v]||"stred";
+}
+function escapeHtml(s){return String(s).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));}
+function escapeAttr(s){return String(s).replace(/"/g,"&quot;").replace(/</g,"&lt;");}
+let toastT;
+function toast(msg){
+  toastEl.textContent=msg; toastEl.classList.add("is-shown");
+  clearTimeout(toastT); toastT=setTimeout(()=>toastEl.classList.remove("is-shown"),2200);
+}
+function shake(){
+  const s=screen.querySelector(".step");
+  if(!s) return;
+  s.animate([{transform:"translateX(0)"},{transform:"translateX(-6px)"},{transform:"translateX(6px)"},{transform:"translateX(0)"}],{duration:260});
+}
+
+/* štart */
+render();
+</script>
+</body>
+</html>
