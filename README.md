@@ -5,7 +5,7 @@ Klikací dotazník, ktorý vyplníš (alebo pošleš klientovi) **pred tvorbou l
 Čistý statický web (1 súbor `index.html` + fonty) — žiadny build, žiadny backend. Ideálne pre GitHub Pages.
 
 ## Vizuál
-Zenko štýl 1:1 — krémový papier `#f3eee3`, warm gold `#b0804f`, Satoshi + JetBrains Mono, hairline linky, mono eyebrowy.
+**zenko.sk 1:1** (zdroj `portfolio-v2`) — biela + zinc sivá, **Outfit** + JetBrains Mono, veľké zaoblené karty, čierne pill CTA, zeleno-teal akcenty (`#0c4b3a` / `#8dc63f` / `#20827c`). Plus reálne zenko prvky: **logo** (brandmark + slash + „Zenko"), **konštrukčný grid** v pozadí (odkrýva sa okolo kurzora) a **živý maskot** (oči sledujú kurzor, žmurká, fúzy). Brand assety v `assets/brand/`.
 
 ## Ako to funguje
 - Jedna otázka = jedna obrazovka (klikačka feeling), progress bar hore.
